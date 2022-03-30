@@ -22,22 +22,38 @@
         <p>{{ $message }}</p>
     </div>
 @endif
- 
+
+    <p>Cari Data Mahasiswa :</p>
+	<form action="{{ route('mahasiswa.index') }}">
+		<input type="text" name="cari" placeholder="Cari Mahasiswa .." value="{{ request('cari')}}">
+		<input type="submit" value="CARI" >
+	</form>
+
     <table class="table table-bordered">
         <tr>
             <th>Nim</th>
             <th>Nama</th>
             <th>Kelas</th>
             <th>Jurusan</th>
+            <th>JenisKelamin</th>
+            <th>E-mail</th>
+            <th>Alamat</th>
+            <th>TanggalLahir</th>
+
             <th width="280px">Action</th>
         </tr>
-        @foreach ($mahasiswa as $mhs)
+        @foreach ($paginate as $mhs)
         <tr>
  
             <td>{{ $mhs ->nim }}</td>
             <td>{{ $mhs ->nama }}</td>
             <td>{{ $mhs ->kelas }}</td>
             <td>{{ $mhs ->jurusan }}</td>
+            <td>{{ $mhs ->jenisKelamin }}</td>
+            <td>{{ $mhs ->email }}</td>
+            <td>{{ $mhs ->alamat }}</td>
+            <td>{{ $mhs ->tanggalLahir }}</td>
+
             <td>
             <form action="{{ route('mahasiswa.destroy',['mahasiswa'=>$mhs->nim]) }}" method="POST">
                 
@@ -51,4 +67,5 @@
         </tr>
         @endforeach
     </table>
-@endsection
+    {{$paginate-> links()}}
+    @endsection
