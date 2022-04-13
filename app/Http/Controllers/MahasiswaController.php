@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
+use App\Models\Kelas;
 use Illuminate\Support\Facades\DB;
 
 class MahasiswaController extends Controller
@@ -16,13 +17,13 @@ class MahasiswaController extends Controller
     public function index()
     {
         if (request('cari')) {
-            $paginate = Mahasiswa::where('nama', 'like', '%' . request('cari') . '%')->paginate(5);
+            $paginate = Mahasiswa::where('nama', 'like', '%' . request('cari') . '%')->paginate(3);
             return view('mahasiswa.index', ['paginate'=>$paginate]);
         }
 
         //fungsi eloquent menampilkan data menggunakan pagination
-        $mahasiswa = Mahasiswa::all(); 
-        $paginate = Mahasiswa::orderBy('id_mahasiswa', 'asc')->paginate(5); 
+        $mahasiswa = Mahasiswa::with('kelas')->get(); 
+        $paginate = Mahasiswa::orderBy('id_mahasiswa', 'asc')->paginate(3); 
         return view('mahasiswa.index', ['mahasiswa' => $mahasiswa,'paginate'=>$paginate]);
     }
 
@@ -33,7 +34,8 @@ class MahasiswaController extends Controller
      */
     public function create()
     {
-        return view('mahasiswa.create');
+        $kelas = Kelas::all();
+        return view('mahasiswa.create', ['kelas' => $kelas]);
     }
 
     /**
@@ -50,14 +52,27 @@ class MahasiswaController extends Controller
             'Nama' => 'required',
             'Kelas' => 'required',
             'Jurusan' => 'required',
-            'JenisKelamin'=> 'required',
-            'Email'=> 'required',
-            'Alamat'=> 'required',
-            'TanggalLahir'=> 'required',
+            // 'JenisKelamin'=> 'required',
+            // 'Email'=> 'required',
+            // 'Alamat'=> 'required',
+            // 'TanggalLahir'=> 'required',
         ]);
 
         //fungsi eloquent untuk menambah data
-        Mahasiswa::create($request->all());
+        $mahasiswa = new Mahasiswa;
+        $mahasiswa->nim = $request->get('Nim');
+        $mahasiswa->nama = $request->get('Nama');
+        $mahasiswa->jurusan = $request->get('Jurusan');
+        $mahasiswa->save();
+        
+        $kelas = new Kelas;
+        $kelas->id = $request->get('Kelas');
+        
+        //Fungsi eloquent untuk menambah data dengan relasi belongsTo
+        $mahasiswa->kelas()->associate($kelas);
+        $mahasiswa->save();
+
+        // Mahasiswa::create($request->all());
 
         //jika data berhasil ditambahkan, akan kembali ke halaman utama
         return redirect()->route('mahasiswa.index')
@@ -73,11 +88,11 @@ class MahasiswaController extends Controller
     public function show($nim)
     {
         //menampilkan detail data dengan menemukan/berdasarkan Nim Mahasiswa
-        $Mahasiswa = Mahasiswa::where('nim', $nim)->first();
-        return view('mahasiswa.detail', compact('Mahasiswa'));
+        $Mahasiswa = Mahasiswa::with('kelas')->where('nim', $nim)->first();
+        return view('mahasiswa.detail', ['Mahasiswa' => $Mahasiswa]);
         
     }
-
+    
     /**
      * Show the form for editing the specified resource.
      *
@@ -87,8 +102,9 @@ class MahasiswaController extends Controller
     public function edit($nim)
     {
         //menampilkan detail data dengan menemukan berdasarkan Nim Mahasiswa untuk diedit
-        $Mahasiswa = DB::table('mahasiswa')->where('nim', $nim)->first();
-        return view('mahasiswa.edit', compact('Mahasiswa'));
+        $Mahasiswa = Mahasiswa::with('kelas')->where('nim', $nim)->first();
+        $kelas = Kelas::all();
+        return view('mahasiswa.edit', compact('Mahasiswa', 'kelas'));
     }
 
     /**
@@ -106,24 +122,24 @@ class MahasiswaController extends Controller
             'Nama' => 'required',
             'Kelas' => 'required',
             'Jurusan' => 'required',
-            'JenisKelamin'=> 'required',
-            'Email'=> 'required',
-            'Alamat'=> 'required',
-            'TanggalLahir'=> 'required', 
+            // 'JenisKelamin'=> 'required',
+            // 'Email'=> 'required',
+            // 'Alamat'=> 'required',
+            // 'TanggalLahir'=> 'required', 
         ]);
 
-        //fungsi eloquent untuk mengupdate data inputan kita
-        Mahasiswa::where('nim', $nim)
-            ->update([
-                'nim'=>$request->Nim,
-                'nama'=>$request->Nama,
-                'kelas'=>$request->Kelas,
-                'jurusan'=>$request->Jurusan,
-                'jenisKelamin'=>$request->JenisKelamin,
-                'email'=>$request->Email,
-                'alamat'=>$request->Alamat,
-                'tanggalLahir'=>$request->TanggalLahir,
-            ]);
+        $mahasiswa = Mahasiswa::with('kelas')->where('nim', $nim)->first();
+        $mahasiswa->nim = $request->get('Nim');
+        $mahasiswa->nama = $request->get('Nama');
+        $mahasiswa->jurusan = $request->get('Jurusan');
+        $mahasiswa->save();
+        
+        $kelas = new Kelas;
+        $kelas->id = $request->get('Kelas');
+        
+        //Fungsi eloquent untuk menambah data dengan relasi belongsTo
+        $mahasiswa->kelas()->associate($kelas);
+        $mahasiswa->save();
         
         //jika data berhasil diupdate, akan kembali ke halaman utama
         return redirect()->route('mahasiswa.index')
@@ -143,20 +159,4 @@ class MahasiswaController extends Controller
         return redirect()->route('mahasiswa.index')
             -> with('success', 'Mahasiswa Berhasil Dihapus');
     }
-
-    public function cari(Request $request)
-	{
-        if (request('cari')) {
-            $paginate = Mahasiswa::where('nama', 'like', '%' . request('cari') . '%')
-                                ->orwhere('nim', 'like', '%' . request('cari') . '%')
-                                ->orwhere('email', 'like', '%' . request('cari') . '%')
-                                ->orwhere('jenisKelamin', 'like', '%' . request('cari') . '%')
-                                ->orwhere('tanggalLahir', 'like', '%' . request('cari') . '%')
-                                ->orwhere('alamat', 'like', '%' . request('cari') . '%')
-                                ->orwhere('kelas', 'like', '%' . request('cari') . '%')
-                                ->orwhere('jurusan', 'like', '%' . request('cari') . '%')->paginate(5);
-            return view('mahasiswa.index', ['paginate'=>$paginate]);
-        }
- 
-	}
 }

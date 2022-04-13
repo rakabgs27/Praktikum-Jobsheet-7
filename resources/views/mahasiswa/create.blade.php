@@ -23,7 +23,7 @@
         <form method="post" action="{{ route('mahasiswa.store') }}" id="myForm">
         @csrf
             <div class="form-group">
-                <label for="Nim">Nim</label> 
+                <label for="Nim">NIM</label> 
                 <input type="text" name="Nim" class="form-control" id="Nim" aria-describedby="Nim" > 
             </div>
             <div class="form-group">
@@ -32,13 +32,18 @@
             </div>
             <div class="form-group">
                 <label for="Kelas">Kelas</label> 
-                <input type="Kelas" name="Kelas" class="form-control" id="Kelas" aria-describedby="password" > 
+                <select class="form-control">
+                @foreach($kelas as $kls)
+                    <option value="{{$kls->id}}" {{ $mahasiswa->kelas_id == $kls->id ? 'selected' : ''}}>{{$kls->nama_kelas}}</option>
+                @endforeach
+                </select>
+                <!-- <input type="Kelas" name="Kelas" class="form-control" id="Kelas" aria-describedby="password" >  -->
             </div>
             <div class="form-group">
                 <label for="Jurusan">Jurusan</label> 
                 <input type="Jurusan" name="Jurusan" class="form-control" id="Jurusan" aria-describedby="Jurusan" > 
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="JenisKelamin">Jenis Kelamin</label> 
                 <input type="text" name="JenisKelamin" class="form-control" id="JenisKelamin" aria-describedby="JenisKelamin" > 
             </div>
@@ -53,7 +58,7 @@
             <div class="form-group">
                 <label for="TanggalLahir">Tanggal Lahir</label> 
                 <input type="TanggalLahir" name="TanggalLahir" class="form-control" id="TanggalLahir" aria-describedby="TanggalLahir" > 
-            </div>
+            </div> -->
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
         </div>

@@ -35,10 +35,10 @@
             <th>Nama</th>
             <th>Kelas</th>
             <th>Jurusan</th>
-            <th>JenisKelamin</th>
+            <!-- <th>JenisKelamin</th>
             <th>E-mail</th>
             <th>Alamat</th>
-            <th>TanggalLahir</th>
+            <th>TanggalLahir</th> -->
 
             <th width="280px">Action</th>
         </tr>
@@ -47,12 +47,12 @@
  
             <td>{{ $mhs ->nim }}</td>
             <td>{{ $mhs ->nama }}</td>
-            <td>{{ $mhs ->kelas }}</td>
+            <td>{{ $mhs ->kelas->nama_kelas }}</td>
             <td>{{ $mhs ->jurusan }}</td>
-            <td>{{ $mhs ->jenisKelamin }}</td>
+            <!-- <td>{{ $mhs ->jenisKelamin }}</td>
             <td>{{ $mhs ->email }}</td>
             <td>{{ $mhs ->alamat }}</td>
-            <td>{{ $mhs ->tanggalLahir }}</td>
+            <td>{{ $mhs ->tanggalLahir }}</td> -->
 
             <td>
             <form action="{{ route('mahasiswa.destroy',['mahasiswa'=>$mhs->nim]) }}" method="POST">
