@@ -40,7 +40,7 @@
             <th>Alamat</th>
             <th>TanggalLahir</th> -->
 
-            <th width="280px">Action</th>
+            <th width="300px">Action</th>
         </tr>
         @foreach ($paginate as $mhs)
         <tr>
@@ -62,6 +62,7 @@
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-danger">Delete</button>
+                <a class="btn btn-warning">Nilai</a>
             </form>
             </td>
         </tr>
