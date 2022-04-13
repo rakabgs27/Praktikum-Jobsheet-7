@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
+use App\Models\MataKuliah;
+use App\Models\Mahasiswa_MataKuliah;
 use App\Models\Kelas;
 use Illuminate\Support\Facades\DB;
 
@@ -52,18 +54,17 @@ class MahasiswaController extends Controller
             'Nama' => 'required',
             'Kelas' => 'required',
             'Jurusan' => 'required',
+        ]);
             // 'JenisKelamin'=> 'required',
             // 'Email'=> 'required',
             // 'Alamat'=> 'required',
             // 'TanggalLahir'=> 'required',
-        ]);
-
         //fungsi eloquent untuk menambah data
         $mahasiswa = new Mahasiswa;
         $mahasiswa->nim = $request->get('Nim');
         $mahasiswa->nama = $request->get('Nama');
         $mahasiswa->jurusan = $request->get('Jurusan');
-        $mahasiswa->save();
+        //$mahasiswa->save();
         
         $kelas = new Kelas;
         $kelas->id = $request->get('Kelas');
@@ -78,7 +79,6 @@ class MahasiswaController extends Controller
         return redirect()->route('mahasiswa.index')
             ->with('success', 'Mahasiswa Berhasil Ditambahkan');
     }
-
     /**
      * Display the specified resource.
      *
@@ -158,5 +158,12 @@ class MahasiswaController extends Controller
         Mahasiswa::where('nim', $nim)->delete();
         return redirect()->route('mahasiswa.index')
             -> with('success', 'Mahasiswa Berhasil Dihapus');
+    }
+
+    public function Mahasiswa_MataKuliah($Nim)
+    {
+        $mahasiswa = Mahasiswa_MataKuliah::with('matakuliah')->where('mahasiswa_id', $Nim)->get();
+        $mahasiswa->mahasiswa = Mahasiswa::with('kelas')->where('id_mahasiswa', $Nim)->first();
+        return view('mahasiswa.nilai', ['mahasiswa' => $mahasiswa]);
     }
 }
