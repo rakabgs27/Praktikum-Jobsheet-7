@@ -4,8 +4,7 @@
 <div class="container">
         <h3 class="text-center mb-5">JURUSAN TEKNOLOGI INFORMASI - POLITEKNIK NEGERI MALANG</h3>
         <h2 class="text-center mb-4">KARTU HASIL STUDI (KHS)</h2>
-
-
+        <a style="float: right"class="btn btn-success mt-3" href="/mahasiswa/nilai/{{ $mahasiswa->mahasiswa->nim }}/pdf">Cetak KHS</a>
         <b>Nama:</b> {{ $mahasiswa->mahasiswa->nama }}<br>
         <b>NIM: </b>{{ $mahasiswa->mahasiswa->nim }}<br>
         <b>Kelas: </b> {{ $mahasiswa->mahasiswa->kelas->nama_kelas }}<br>

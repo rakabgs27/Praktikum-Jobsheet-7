@@ -13,12 +13,13 @@
                     <li class="list-group-item"><b>Nama: </b>{{$Mahasiswa->nama}}</li>
                     <li class="list-group-item"><b>Kelas: </b>{{$Mahasiswa->kelas->nama_kelas}}</li>
                     <li class="list-group-item"><b>Jurusan: </b>{{$Mahasiswa->jurusan}}</li>
+                    <li class="list-group-item"> <img width="250px" src="{{asset('storage/'.$Mahasiswa->foto)}}"></li>
                     <!-- <li class="list-group-item"><b>Jenis Kelamin: </b>{{$Mahasiswa->jenisKelamin}}</li>
                     <li class="list-group-item"><b>E-mail: </b>{{$Mahasiswa->email}}</li>
                     <li class="list-group-item"><b>Alamat: </b>{{$Mahasiswa->alamat}}</li>
                     <li class="list-group-item"><b>Tanggal Lahir: </b>{{$Mahasiswa->tanggalLahir}}</li> -->
                 </ul>
-            </div>
+            </div><br>
             <a class="btn btn-success mt-3" href="{{ route('mahasiswa.index') }}">Kembali</a>
         </div>
     </div>
